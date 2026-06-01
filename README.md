@@ -13,5 +13,3 @@ El sistema expone la ruta base `http://localhost:3000/api/products`. Un ejemplo 
 Cuando se quiera subir una imagen local desde un cliente HTTP, la solicitud de creación o actualización debe enviarse como `multipart/form-data` usando el campo `image_file`. Para registrar una imagen mediante enlace se puede usar el campo `image_url`.
 
 El archivo `render.yaml` ya está preparado para desplegar el servicio web en Render usando `npm install` como comando de construcción y `npm start` como comando de arranque. La URL pública del proyecto debe registrarse en este documento una vez realizado el despliegue. URL del proyecto en línea: pendiente de actualización con la dirección pública final.
-
-Para la entrega final se recomienda adjuntar capturas o un video entre cinco y diez minutos mostrando la creación, edición, eliminación y consulta de productos, además del funcionamiento de la imagen automática y la interfaz web.
