@@ -4,22 +4,24 @@ const selectableFields = 'id, name, description, price, stock, image_url';
 const updatableFields = ['name', 'description', 'price', 'stock', 'image_url'];
 
 async function findAllProducts() {
-  const [rows] = await pool.query(`SELECT ${selectableFields} FROM products ORDER BY id DESC`);
+  const { rows } = await pool.query(`SELECT ${selectableFields} FROM products ORDER BY id DESC`);
   return rows;
 }
 
 async function findProductById(id) {
-  const [rows] = await pool.query(`SELECT ${selectableFields} FROM products WHERE id = ?`, [id]);
+  const { rows } = await pool.query(`SELECT ${selectableFields} FROM products WHERE id = $1`, [id]);
   return rows[0] || null;
 }
 
 async function createProduct(product) {
   const { name, description, price, stock, image_url } = product;
-  const [result] = await pool.query(
-    'INSERT INTO products (name, description, price, stock, image_url) VALUES (?, ?, ?, ?, ?)',
+  const { rows } = await pool.query(
+    `INSERT INTO products (name, description, price, stock, image_url)
+     VALUES ($1, $2, $3, $4, $5)
+     RETURNING ${selectableFields}`,
     [name, description, price, stock, image_url]
   );
-  return findProductById(result.insertId);
+  return rows[0] || null;
 }
 
 async function updateProduct(id, product) {
@@ -28,7 +30,7 @@ async function updateProduct(id, product) {
 
   updatableFields.forEach((field) => {
     if (Object.prototype.hasOwnProperty.call(product, field)) {
-      fields.push(`${field} = ?`);
+      fields.push(`${field} = $${values.length + 1}`);
       values.push(product[field]);
     }
   });
@@ -38,13 +40,16 @@ async function updateProduct(id, product) {
   }
 
   values.push(id);
-  await pool.query(`UPDATE products SET ${fields.join(', ')} WHERE id = ?`, values);
-  return findProductById(id);
+  const { rows } = await pool.query(
+    `UPDATE products SET ${fields.join(', ')} WHERE id = $${values.length} RETURNING ${selectableFields}`,
+    values
+  );
+  return rows[0] || null;
 }
 
 async function deleteProduct(id) {
-  const [result] = await pool.query('DELETE FROM products WHERE id = ?', [id]);
-  return result.affectedRows > 0;
+  const result = await pool.query('DELETE FROM products WHERE id = $1', [id]);
+  return result.rowCount > 0;
 }
 
 module.exports = {
