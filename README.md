@@ -1,0 +1,17 @@
+# Ecommerce con Express.js, MySQL y API externa
+
+Este proyecto desarrolla un ecommerce básico con backend en Express.js, base de datos MySQL y consumo de una API externa para obtener imágenes de productos al momento de registrarlos. La aplicación incluye una interfaz web para gestionar el catálogo y una API RESTful para realizar operaciones CRUD sobre la tabla products.
+
+La aplicación permite listar productos, consultar un producto por identificador, registrar productos con imagen automática, actualizar su información y eliminarlos. El backend trabaja con validaciones mediante Joi, middleware de logging con Morgan y manejo centralizado de errores. La interfaz muestra el inventario, el valor total y un formulario de gestión de productos con un diseño formal en tonos claros y oscuros.
+
+El registro y la actualización de productos permiten definir la imagen de tres formas. Se puede ingresar una URL directa, cargar un archivo local desde el equipo o dejar el campo sin imagen para que el sistema consulte una API externa y complete ese dato automáticamente. El formulario incorpora una vista previa inmediata para la imagen seleccionada.
+
+Para ejecutar el proyecto en local se necesita Node.js 18 o superior y una instancia de MySQL disponible. Primero se debe instalar las dependencias con el comando `npm install`. Luego se debe crear un archivo `.env` tomando como referencia `.env.example` y completar los valores de conexión a MySQL. Después se debe verificar que el servicio MySQL esté en ejecución, crear la base de datos configurada y ejecutar el script `database/schema.sql` en MySQL para asegurar la estructura inicial. Finalmente, la aplicación se inicia con `npm run dev` para desarrollo o con `npm start` para un entorno estándar.
+
+El sistema expone la ruta base `http://localhost:3000/api/products`. Un ejemplo para listar productos es `GET /api/products`. Un ejemplo para consultar un producto es `GET /api/products/1`. Un ejemplo para registrar un producto es `POST /api/products` enviando un cuerpo JSON como `{"name":"Teclado mecánico","description":"Teclado inalámbrico con estructura metálica","price":249.9,"stock":18}`. Un ejemplo para actualizarlo es `PUT /api/products/1` con un cuerpo JSON como `{"name":"Teclado mecánico pro","price":279.9,"stock":12}`. Un ejemplo para eliminarlo es `DELETE /api/products/1`.
+
+Cuando se quiera subir una imagen local desde un cliente HTTP, la solicitud de creación o actualización debe enviarse como `multipart/form-data` usando el campo `image_file`. Para registrar una imagen mediante enlace se puede usar el campo `image_url`.
+
+El archivo `render.yaml` ya está preparado para desplegar el servicio web en Render usando `npm install` como comando de construcción y `npm start` como comando de arranque. La URL pública del proyecto debe registrarse en este documento una vez realizado el despliegue. URL del proyecto en línea: pendiente de actualización con la dirección pública final.
+
+Para la entrega final se recomienda adjuntar capturas o un video entre cinco y diez minutos mostrando la creación, edición, eliminación y consulta de productos, además del funcionamiento de la imagen automática y la interfaz web.
